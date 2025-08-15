@@ -134,4 +134,14 @@ public interface TransactionModuleAPI {
      * Get returns in a specific month
      */
     long getReturnsInMonth(int year, int month);
+    
+    /**
+     * Get total borrow transactions count
+     */
+    long getBorrowTransactionsCount();
+    
+    /**
+     * Get total return transactions count
+     */
+    long getReturnTransactionsCount();
 }

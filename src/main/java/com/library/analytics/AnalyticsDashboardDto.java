@@ -8,18 +8,13 @@ import java.util.Map;
 
 public class AnalyticsDashboardDto {
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime generatedAt;
-    
-    private UserAnalyticsDto userAnalytics;
-    private BookAnalyticsDto bookAnalytics;
-    private TransactionAnalyticsDto transactionAnalytics;
-    private InventoryAnalyticsDto inventoryAnalytics;
-    private SystemHealthDto systemHealth;
+    private MetadataDto metadata;
+    private DashboardDto dashboard;
     
     // Constructors
     public AnalyticsDashboardDto() {
-        this.generatedAt = LocalDateTime.now();
+        this.metadata = new MetadataDto();
+        this.dashboard = new DashboardDto();
     }
     
     public AnalyticsDashboardDto(UserAnalyticsDto userAnalytics, 
@@ -28,84 +23,104 @@ public class AnalyticsDashboardDto {
                                 InventoryAnalyticsDto inventoryAnalytics,
                                 SystemHealthDto systemHealth) {
         this();
-        this.userAnalytics = userAnalytics;
-        this.bookAnalytics = bookAnalytics;
-        this.transactionAnalytics = transactionAnalytics;
-        this.inventoryAnalytics = inventoryAnalytics;
-        this.systemHealth = systemHealth;
+        this.dashboard.userAnalytics = userAnalytics;
+        this.dashboard.bookAnalytics = bookAnalytics;
+        this.dashboard.transactionAnalytics = transactionAnalytics;
+        this.dashboard.inventoryAnalytics = inventoryAnalytics;
+        this.dashboard.systemHealth = systemHealth;
     }
     
     // Getters and Setters
-    public LocalDateTime getGeneratedAt() {
-        return generatedAt;
+    public MetadataDto getMetadata() {
+        return metadata;
     }
     
-    public void setGeneratedAt(LocalDateTime generatedAt) {
-        this.generatedAt = generatedAt;
+    public void setMetadata(MetadataDto metadata) {
+        this.metadata = metadata;
     }
     
-    public UserAnalyticsDto getUserAnalytics() {
-        return userAnalytics;
+    public DashboardDto getDashboard() {
+        return dashboard;
     }
     
-    public void setUserAnalytics(UserAnalyticsDto userAnalytics) {
-        this.userAnalytics = userAnalytics;
+    public void setDashboard(DashboardDto dashboard) {
+        this.dashboard = dashboard;
     }
-    
-    public BookAnalyticsDto getBookAnalytics() {
-        return bookAnalytics;
+
+    // Main nested classes
+    public static class MetadataDto {
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
+        private LocalDateTime generatedAt;
+        private String dataFreshness;
+        private long executionTimeMs;
+        
+        public MetadataDto() {
+            this.generatedAt = LocalDateTime.now();
+            this.dataFreshness = "REAL_TIME";
+            this.executionTimeMs = 0;
+        }
+        
+        public LocalDateTime getGeneratedAt() { return generatedAt; }
+        public void setGeneratedAt(LocalDateTime generatedAt) { this.generatedAt = generatedAt; }
+        
+        public String getDataFreshness() { return dataFreshness; }
+        public void setDataFreshness(String dataFreshness) { this.dataFreshness = dataFreshness; }
+        
+        public long getExecutionTimeMs() { return executionTimeMs; }
+        public void setExecutionTimeMs(long executionTimeMs) { this.executionTimeMs = executionTimeMs; }
     }
-    
-    public void setBookAnalytics(BookAnalyticsDto bookAnalytics) {
-        this.bookAnalytics = bookAnalytics;
+
+    public static class DashboardDto {
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime generatedAt;
+        private UserAnalyticsDto userAnalytics;
+        private BookAnalyticsDto bookAnalytics;
+        private TransactionAnalyticsDto transactionAnalytics;
+        private InventoryAnalyticsDto inventoryAnalytics;
+        private SystemHealthDto systemHealth;
+        
+        public DashboardDto() {
+            this.generatedAt = LocalDateTime.now();
+        }
+        
+        public LocalDateTime getGeneratedAt() { return generatedAt; }
+        public void setGeneratedAt(LocalDateTime generatedAt) { this.generatedAt = generatedAt; }
+        
+        public UserAnalyticsDto getUserAnalytics() { return userAnalytics; }
+        public void setUserAnalytics(UserAnalyticsDto userAnalytics) { this.userAnalytics = userAnalytics; }
+        
+        public BookAnalyticsDto getBookAnalytics() { return bookAnalytics; }
+        public void setBookAnalytics(BookAnalyticsDto bookAnalytics) { this.bookAnalytics = bookAnalytics; }
+        
+        public TransactionAnalyticsDto getTransactionAnalytics() { return transactionAnalytics; }
+        public void setTransactionAnalytics(TransactionAnalyticsDto transactionAnalytics) { this.transactionAnalytics = transactionAnalytics; }
+        
+        public InventoryAnalyticsDto getInventoryAnalytics() { return inventoryAnalytics; }
+        public void setInventoryAnalytics(InventoryAnalyticsDto inventoryAnalytics) { this.inventoryAnalytics = inventoryAnalytics; }
+        
+        public SystemHealthDto getSystemHealth() { return systemHealth; }
+        public void setSystemHealth(SystemHealthDto systemHealth) { this.systemHealth = systemHealth; }
     }
-    
-    public TransactionAnalyticsDto getTransactionAnalytics() {
-        return transactionAnalytics;
-    }
-    
-    public void setTransactionAnalytics(TransactionAnalyticsDto transactionAnalytics) {
-        this.transactionAnalytics = transactionAnalytics;
-    }
-    
-    public InventoryAnalyticsDto getInventoryAnalytics() {
-        return inventoryAnalytics;
-    }
-    
-    public void setInventoryAnalytics(InventoryAnalyticsDto inventoryAnalytics) {
-        this.inventoryAnalytics = inventoryAnalytics;
-    }
-    
-    public SystemHealthDto getSystemHealth() {
-        return systemHealth;
-    }
-    
-    public void setSystemHealth(SystemHealthDto systemHealth) {
-        this.systemHealth = systemHealth;
-    }
-    
-    // Nested DTOs
     public static class UserAnalyticsDto {
         private long totalUsers;
         private long activeUsers;
         private long newUsersThisMonth;
-        private long adminCount;
-        private long librarianCount;
-        private long userCount;
+        private double userGrowthRate;
         private Map<String, Long> usersByRole;
-        private List<UserGrowthDto> userGrowth;
+        private List<TopActiveUserDto> topActiveUsers;
         
         // Constructors, getters and setters
         public UserAnalyticsDto() {}
         
         public UserAnalyticsDto(long totalUsers, long activeUsers, long newUsersThisMonth,
-                               long adminCount, long librarianCount, long userCount) {
+                               double userGrowthRate, Map<String, Long> usersByRole,
+                               List<TopActiveUserDto> topActiveUsers) {
             this.totalUsers = totalUsers;
             this.activeUsers = activeUsers;
             this.newUsersThisMonth = newUsersThisMonth;
-            this.adminCount = adminCount;
-            this.librarianCount = librarianCount;
-            this.userCount = userCount;
+            this.userGrowthRate = userGrowthRate;
+            this.usersByRole = usersByRole;
+            this.topActiveUsers = topActiveUsers;
         }
         
         // Getters and Setters
@@ -118,96 +133,91 @@ public class AnalyticsDashboardDto {
         public long getNewUsersThisMonth() { return newUsersThisMonth; }
         public void setNewUsersThisMonth(long newUsersThisMonth) { this.newUsersThisMonth = newUsersThisMonth; }
         
-        public long getAdminCount() { return adminCount; }
-        public void setAdminCount(long adminCount) { this.adminCount = adminCount; }
-        
-        public long getLibrarianCount() { return librarianCount; }
-        public void setLibrarianCount(long librarianCount) { this.librarianCount = librarianCount; }
-        
-        public long getUserCount() { return userCount; }
-        public void setUserCount(long userCount) { this.userCount = userCount; }
+        public double getUserGrowthRate() { return userGrowthRate; }
+        public void setUserGrowthRate(double userGrowthRate) { this.userGrowthRate = userGrowthRate; }
         
         public Map<String, Long> getUsersByRole() { return usersByRole; }
         public void setUsersByRole(Map<String, Long> usersByRole) { this.usersByRole = usersByRole; }
         
-        public List<UserGrowthDto> getUserGrowth() { return userGrowth; }
-        public void setUserGrowth(List<UserGrowthDto> userGrowth) { this.userGrowth = userGrowth; }
+        public List<TopActiveUserDto> getTopActiveUsers() { return topActiveUsers; }
+        public void setTopActiveUsers(List<TopActiveUserDto> topActiveUsers) { this.topActiveUsers = topActiveUsers; }
     }
     
     public static class BookAnalyticsDto {
         private long totalBooks;
-        private long totalCopies;
-        private long availableCopies;
-        private long borrowedCopies;
-        private long outOfStockBooks;
-        private long lowStockBooks;
+        private long availableBooks;
+        private long borrowedBooks;
         private Map<String, Long> booksByCategory;
-        private List<PopularBookDto> popularBooks;
-        private List<RecentBookDto> recentBooks;
+        private List<PopularBookDto> mostBorrowedBooks;
+        private List<PopularBookDto> leastBorrowedBooks;
+        private double averageBooksPerUser;
         
         // Constructors
         public BookAnalyticsDto() {}
         
-        public BookAnalyticsDto(long totalBooks, long totalCopies, long availableCopies,
-                               long borrowedCopies, long outOfStockBooks, long lowStockBooks) {
+        public BookAnalyticsDto(long totalBooks, long availableBooks, long borrowedBooks,
+                               Map<String, Long> booksByCategory, List<PopularBookDto> mostBorrowedBooks,
+                               List<PopularBookDto> leastBorrowedBooks, double averageBooksPerUser) {
             this.totalBooks = totalBooks;
-            this.totalCopies = totalCopies;
-            this.availableCopies = availableCopies;
-            this.borrowedCopies = borrowedCopies;
-            this.outOfStockBooks = outOfStockBooks;
-            this.lowStockBooks = lowStockBooks;
+            this.availableBooks = availableBooks;
+            this.borrowedBooks = borrowedBooks;
+            this.booksByCategory = booksByCategory;
+            this.mostBorrowedBooks = mostBorrowedBooks;
+            this.leastBorrowedBooks = leastBorrowedBooks;
+            this.averageBooksPerUser = averageBooksPerUser;
         }
         
         // Getters and Setters
         public long getTotalBooks() { return totalBooks; }
         public void setTotalBooks(long totalBooks) { this.totalBooks = totalBooks; }
         
-        public long getTotalCopies() { return totalCopies; }
-        public void setTotalCopies(long totalCopies) { this.totalCopies = totalCopies; }
+        public long getAvailableBooks() { return availableBooks; }
+        public void setAvailableBooks(long availableBooks) { this.availableBooks = availableBooks; }
         
-        public long getAvailableCopies() { return availableCopies; }
-        public void setAvailableCopies(long availableCopies) { this.availableCopies = availableCopies; }
-        
-        public long getBorrowedCopies() { return borrowedCopies; }
-        public void setBorrowedCopies(long borrowedCopies) { this.borrowedCopies = borrowedCopies; }
-        
-        public long getOutOfStockBooks() { return outOfStockBooks; }
-        public void setOutOfStockBooks(long outOfStockBooks) { this.outOfStockBooks = outOfStockBooks; }
-        
-        public long getLowStockBooks() { return lowStockBooks; }
-        public void setLowStockBooks(long lowStockBooks) { this.lowStockBooks = lowStockBooks; }
+        public long getBorrowedBooks() { return borrowedBooks; }
+        public void setBorrowedBooks(long borrowedBooks) { this.borrowedBooks = borrowedBooks; }
         
         public Map<String, Long> getBooksByCategory() { return booksByCategory; }
         public void setBooksByCategory(Map<String, Long> booksByCategory) { this.booksByCategory = booksByCategory; }
         
-        public List<PopularBookDto> getPopularBooks() { return popularBooks; }
-        public void setPopularBooks(List<PopularBookDto> popularBooks) { this.popularBooks = popularBooks; }
+        public List<PopularBookDto> getMostBorrowedBooks() { return mostBorrowedBooks; }
+        public void setMostBorrowedBooks(List<PopularBookDto> mostBorrowedBooks) { this.mostBorrowedBooks = mostBorrowedBooks; }
         
-        public List<RecentBookDto> getRecentBooks() { return recentBooks; }
-        public void setRecentBooks(List<RecentBookDto> recentBooks) { this.recentBooks = recentBooks; }
+        public List<PopularBookDto> getLeastBorrowedBooks() { return leastBorrowedBooks; }
+        public void setLeastBorrowedBooks(List<PopularBookDto> leastBorrowedBooks) { this.leastBorrowedBooks = leastBorrowedBooks; }
+        
+        public double getAverageBooksPerUser() { return averageBooksPerUser; }
+        public void setAverageBooksPerUser(double averageBooksPerUser) { this.averageBooksPerUser = averageBooksPerUser; }
     }
     
     public static class TransactionAnalyticsDto {
         private long totalTransactions;
         private long activeTransactions;
-        private long completedTransactions;
         private long overdueTransactions;
+        private long transactionsToday;
+        private long transactionsThisWeek;
         private long transactionsThisMonth;
-        private double averageBorrowingDuration;
-        private List<BorrowingPatternDto> borrowingPatterns;
+        private double averageReturnTime;
+        private Map<String, Long> transactionsByType;
+        private List<RecentActivityDto> recentActivity;
         
         // Constructors
         public TransactionAnalyticsDto() {}
         
         public TransactionAnalyticsDto(long totalTransactions, long activeTransactions,
-                                     long completedTransactions, long overdueTransactions,
-                                     long transactionsThisMonth, double averageBorrowingDuration) {
+                                     long overdueTransactions, long transactionsToday,
+                                     long transactionsThisWeek, long transactionsThisMonth,
+                                     double averageReturnTime, Map<String, Long> transactionsByType,
+                                     List<RecentActivityDto> recentActivity) {
             this.totalTransactions = totalTransactions;
             this.activeTransactions = activeTransactions;
-            this.completedTransactions = completedTransactions;
             this.overdueTransactions = overdueTransactions;
+            this.transactionsToday = transactionsToday;
+            this.transactionsThisWeek = transactionsThisWeek;
             this.transactionsThisMonth = transactionsThisMonth;
-            this.averageBorrowingDuration = averageBorrowingDuration;
+            this.averageReturnTime = averageReturnTime;
+            this.transactionsByType = transactionsByType;
+            this.recentActivity = recentActivity;
         }
         
         // Getters and Setters
@@ -217,20 +227,26 @@ public class AnalyticsDashboardDto {
         public long getActiveTransactions() { return activeTransactions; }
         public void setActiveTransactions(long activeTransactions) { this.activeTransactions = activeTransactions; }
         
-        public long getCompletedTransactions() { return completedTransactions; }
-        public void setCompletedTransactions(long completedTransactions) { this.completedTransactions = completedTransactions; }
-        
         public long getOverdueTransactions() { return overdueTransactions; }
         public void setOverdueTransactions(long overdueTransactions) { this.overdueTransactions = overdueTransactions; }
+        
+        public long getTransactionsToday() { return transactionsToday; }
+        public void setTransactionsToday(long transactionsToday) { this.transactionsToday = transactionsToday; }
+        
+        public long getTransactionsThisWeek() { return transactionsThisWeek; }
+        public void setTransactionsThisWeek(long transactionsThisWeek) { this.transactionsThisWeek = transactionsThisWeek; }
         
         public long getTransactionsThisMonth() { return transactionsThisMonth; }
         public void setTransactionsThisMonth(long transactionsThisMonth) { this.transactionsThisMonth = transactionsThisMonth; }
         
-        public double getAverageBorrowingDuration() { return averageBorrowingDuration; }
-        public void setAverageBorrowingDuration(double averageBorrowingDuration) { this.averageBorrowingDuration = averageBorrowingDuration; }
+        public double getAverageReturnTime() { return averageReturnTime; }
+        public void setAverageReturnTime(double averageReturnTime) { this.averageReturnTime = averageReturnTime; }
         
-        public List<BorrowingPatternDto> getBorrowingPatterns() { return borrowingPatterns; }
-        public void setBorrowingPatterns(List<BorrowingPatternDto> borrowingPatterns) { this.borrowingPatterns = borrowingPatterns; }
+        public Map<String, Long> getTransactionsByType() { return transactionsByType; }
+        public void setTransactionsByType(Map<String, Long> transactionsByType) { this.transactionsByType = transactionsByType; }
+        
+        public List<RecentActivityDto> getRecentActivity() { return recentActivity; }
+        public void setRecentActivity(List<RecentActivityDto> recentActivity) { this.recentActivity = recentActivity; }
     }
     
     public static class InventoryAnalyticsDto {
@@ -238,20 +254,23 @@ public class AnalyticsDashboardDto {
         private long availableCopies;
         private long borrowedCopies;
         private double utilizationRate;
-        private long lowStockAlerts;
-        private long outOfStockItems;
+        private List<String> lowStockBooks;
+        private List<String> highDemandBooks;
+        private Map<String, Double> categoryUtilization;
         
         // Constructors
         public InventoryAnalyticsDto() {}
         
         public InventoryAnalyticsDto(long totalCopies, long availableCopies, long borrowedCopies,
-                                   double utilizationRate, long lowStockAlerts, long outOfStockItems) {
+                                   double utilizationRate, List<String> lowStockBooks,
+                                   List<String> highDemandBooks, Map<String, Double> categoryUtilization) {
             this.totalCopies = totalCopies;
             this.availableCopies = availableCopies;
             this.borrowedCopies = borrowedCopies;
             this.utilizationRate = utilizationRate;
-            this.lowStockAlerts = lowStockAlerts;
-            this.outOfStockItems = outOfStockItems;
+            this.lowStockBooks = lowStockBooks;
+            this.highDemandBooks = highDemandBooks;
+            this.categoryUtilization = categoryUtilization;
         }
         
         // Getters and Setters
@@ -267,82 +286,93 @@ public class AnalyticsDashboardDto {
         public double getUtilizationRate() { return utilizationRate; }
         public void setUtilizationRate(double utilizationRate) { this.utilizationRate = utilizationRate; }
         
-        public long getLowStockAlerts() { return lowStockAlerts; }
-        public void setLowStockAlerts(long lowStockAlerts) { this.lowStockAlerts = lowStockAlerts; }
+        public List<String> getLowStockBooks() { return lowStockBooks; }
+        public void setLowStockBooks(List<String> lowStockBooks) { this.lowStockBooks = lowStockBooks; }
         
-        public long getOutOfStockItems() { return outOfStockItems; }
-        public void setOutOfStockItems(long outOfStockItems) { this.outOfStockItems = outOfStockItems; }
+        public List<String> getHighDemandBooks() { return highDemandBooks; }
+        public void setHighDemandBooks(List<String> highDemandBooks) { this.highDemandBooks = highDemandBooks; }
+        
+        public Map<String, Double> getCategoryUtilization() { return categoryUtilization; }
+        public void setCategoryUtilization(Map<String, Double> categoryUtilization) { this.categoryUtilization = categoryUtilization; }
     }
     
     public static class SystemHealthDto {
         private String status;
-        private double cpuUsage;
-        private double memoryUsage;
+        private double responseTime;
         private long uptime;
-        private int activeConnections;
+        private Map<String, String> moduleStatus;
+        private List<String> recentErrors;
         
         // Constructors
         public SystemHealthDto() {}
         
-        public SystemHealthDto(String status, double cpuUsage, double memoryUsage, long uptime, int activeConnections) {
+        public SystemHealthDto(String status, double responseTime, long uptime,
+                              Map<String, String> moduleStatus, List<String> recentErrors) {
             this.status = status;
-            this.cpuUsage = cpuUsage;
-            this.memoryUsage = memoryUsage;
+            this.responseTime = responseTime;
             this.uptime = uptime;
-            this.activeConnections = activeConnections;
+            this.moduleStatus = moduleStatus;
+            this.recentErrors = recentErrors;
         }
         
         // Getters and Setters
         public String getStatus() { return status; }
         public void setStatus(String status) { this.status = status; }
         
-        public double getCpuUsage() { return cpuUsage; }
-        public void setCpuUsage(double cpuUsage) { this.cpuUsage = cpuUsage; }
-        
-        public double getMemoryUsage() { return memoryUsage; }
-        public void setMemoryUsage(double memoryUsage) { this.memoryUsage = memoryUsage; }
+        public double getResponseTime() { return responseTime; }
+        public void setResponseTime(double responseTime) { this.responseTime = responseTime; }
         
         public long getUptime() { return uptime; }
         public void setUptime(long uptime) { this.uptime = uptime; }
         
-        public int getActiveConnections() { return activeConnections; }
-        public void setActiveConnections(int activeConnections) { this.activeConnections = activeConnections; }
+        public Map<String, String> getModuleStatus() { return moduleStatus; }
+        public void setModuleStatus(Map<String, String> moduleStatus) { this.moduleStatus = moduleStatus; }
+        
+        public List<String> getRecentErrors() { return recentErrors; }
+        public void setRecentErrors(List<String> recentErrors) { this.recentErrors = recentErrors; }
     }
     
     // Supporting DTOs
-    public static class UserGrowthDto {
-        private String period;
-        private long userCount;
+    public static class TopActiveUserDto {
+        private String username;
+        private String email;
+        private long totalTransactions;
+        private long activeTransactions;
         
-        public UserGrowthDto() {}
-        public UserGrowthDto(String period, long userCount) {
-            this.period = period;
-            this.userCount = userCount;
+        public TopActiveUserDto() {}
+        public TopActiveUserDto(String username, String email, long totalTransactions, long activeTransactions) {
+            this.username = username;
+            this.email = email;
+            this.totalTransactions = totalTransactions;
+            this.activeTransactions = activeTransactions;
         }
         
-        public String getPeriod() { return period; }
-        public void setPeriod(String period) { this.period = period; }
+        public String getUsername() { return username; }
+        public void setUsername(String username) { this.username = username; }
         
-        public long getUserCount() { return userCount; }
-        public void setUserCount(long userCount) { this.userCount = userCount; }
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        
+        public long getTotalTransactions() { return totalTransactions; }
+        public void setTotalTransactions(long totalTransactions) { this.totalTransactions = totalTransactions; }
+        
+        public long getActiveTransactions() { return activeTransactions; }
+        public void setActiveTransactions(long activeTransactions) { this.activeTransactions = activeTransactions; }
     }
     
     public static class PopularBookDto {
-        private Long bookId;
         private String title;
         private String author;
+        private String category;
         private long borrowCount;
         
         public PopularBookDto() {}
-        public PopularBookDto(Long bookId, String title, String author, long borrowCount) {
-            this.bookId = bookId;
+        public PopularBookDto(String title, String author, String category, long borrowCount) {
             this.title = title;
             this.author = author;
+            this.category = category;
             this.borrowCount = borrowCount;
         }
-        
-        public Long getBookId() { return bookId; }
-        public void setBookId(Long bookId) { this.bookId = bookId; }
         
         public String getTitle() { return title; }
         public void setTitle(String title) { this.title = title; }
@@ -350,56 +380,32 @@ public class AnalyticsDashboardDto {
         public String getAuthor() { return author; }
         public void setAuthor(String author) { this.author = author; }
         
+        public String getCategory() { return category; }
+        public void setCategory(String category) { this.category = category; }
+        
         public long getBorrowCount() { return borrowCount; }
         public void setBorrowCount(long borrowCount) { this.borrowCount = borrowCount; }
     }
     
-    public static class RecentBookDto {
-        private Long bookId;
-        private String title;
-        private String author;
-        private LocalDateTime addedDate;
+    public static class RecentActivityDto {
+        private String date;
+        private long borrowings;
+        private long returns;
         
-        public RecentBookDto() {}
-        public RecentBookDto(Long bookId, String title, String author, LocalDateTime addedDate) {
-            this.bookId = bookId;
-            this.title = title;
-            this.author = author;
-            this.addedDate = addedDate;
+        public RecentActivityDto() {}
+        public RecentActivityDto(String date, long borrowings, long returns) {
+            this.date = date;
+            this.borrowings = borrowings;
+            this.returns = returns;
         }
         
-        public Long getBookId() { return bookId; }
-        public void setBookId(Long bookId) { this.bookId = bookId; }
+        public String getDate() { return date; }
+        public void setDate(String date) { this.date = date; }
         
-        public String getTitle() { return title; }
-        public void setTitle(String title) { this.title = title; }
+        public long getBorrowings() { return borrowings; }
+        public void setBorrowings(long borrowings) { this.borrowings = borrowings; }
         
-        public String getAuthor() { return author; }
-        public void setAuthor(String author) { this.author = author; }
-        
-        public LocalDateTime getAddedDate() { return addedDate; }
-        public void setAddedDate(LocalDateTime addedDate) { this.addedDate = addedDate; }
-    }
-    
-    public static class BorrowingPatternDto {
-        private String period;
-        private long borrowCount;
-        private long returnCount;
-        
-        public BorrowingPatternDto() {}
-        public BorrowingPatternDto(String period, long borrowCount, long returnCount) {
-            this.period = period;
-            this.borrowCount = borrowCount;
-            this.returnCount = returnCount;
-        }
-        
-        public String getPeriod() { return period; }
-        public void setPeriod(String period) { this.period = period; }
-        
-        public long getBorrowCount() { return borrowCount; }
-        public void setBorrowCount(long borrowCount) { this.borrowCount = borrowCount; }
-        
-        public long getReturnCount() { return returnCount; }
-        public void setReturnCount(long returnCount) { this.returnCount = returnCount; }
+        public long getReturns() { return returns; }
+        public void setReturns(long returns) { this.returns = returns; }
     }
 }

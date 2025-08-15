@@ -264,6 +264,16 @@ public class TransactionService implements TransactionModuleAPI {
         return transactionRepository.countReturnsBetween(startOfMonth, endOfMonth);
     }
     
+    @Override
+    public long getBorrowTransactionsCount() {
+        return transactionRepository.countByType(Transaction.TransactionType.BORROW);
+    }
+    
+    @Override
+    public long getReturnTransactionsCount() {
+        return transactionRepository.countByType(Transaction.TransactionType.RETURN);
+    }
+    
     public boolean hasActiveTransaction(Long userId, Long bookId) {
         return transactionRepository.findActiveTransactionByUserAndBook(userId, bookId).isPresent();
     }

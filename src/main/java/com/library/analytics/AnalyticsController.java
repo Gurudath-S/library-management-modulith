@@ -20,22 +20,8 @@ public class AnalyticsController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('LIBRARIAN')")
     public ResponseEntity<?> getDashboard() {
         try {
-            long startTime = System.currentTimeMillis();
-            
             AnalyticsDashboardDto dashboard = analyticsModuleAPI.generateDashboard();
-            
-            long executionTime = System.currentTimeMillis() - startTime;
-            
-            // Add execution metadata for performance analysis
-            Map<String, Object> response = new HashMap<>();
-            response.put("dashboard", dashboard);
-            response.put("metadata", Map.of(
-                "executionTimeMs", executionTime,
-                "generatedAt", dashboard.getGeneratedAt(),
-                "dataFreshness", "REAL_TIME"
-            ));
-            
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(dashboard);
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                 .body(Map.of(
