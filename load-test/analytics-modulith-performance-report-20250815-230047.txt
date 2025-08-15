@@ -1,0 +1,64 @@
+﻿=== MODULITH ARCHITECTURE PERFORMANCE REPORT ===
+Generated: 2025-08-15 23:00:47
+
+Test Configuration:
+  Concurrent Users: 50
+  Test Duration: 5 minutes
+  Max Concurrent Jobs: 25
+  Target Endpoint: /api/analytics/dashboard
+  Base URL: http://localhost:8080
+  Warmup Requests: 5
+
+Request Statistics:
+  Total Requests: 1723
+  Successful Requests: 1723
+  Failed Requests: 0
+  Success Rate: 100%
+  Throughput: 5.74 requests/second
+
+Response Time Analysis:
+  Average Response Time: 261.23ms
+  Median Response Time: 257ms
+  Minimum Response Time: 131ms
+  Maximum Response Time: 468ms
+
+Response Time Percentiles:
+  90th Percentile: 324ms
+  95th Percentile: 345ms
+  99th Percentile: 384ms
+
+Data Analysis:
+  Average Response Data Size: 1770.5 bytes
+  Performance Assessment:  [+] Good response time for microservices (< 1s)
+  [+] Excellent reliability (> 95% success rate)
+
+Architecture Notes:
+  - This test represents modulith architecture performance
+  - Data aggregation happens across multiple services via moduleapis
+  - Inter-module communication does not add latency in most cases
+  - Each service runs as separate modules inside the same application
+  - JWT tokens propagated across module boundaries
+
+Test Environment:
+  - Spring Boot 3.3.0 microservices
+  - Docker containerized deployment
+  - H2 in-memory databases for service
+  - JWT authentication with token propagation
+
+Memory Optimization Applied:
+  - Job throttling with max 25 concurrent jobs
+  - ArrayList for better memory management
+  - Explicit garbage collection
+  - Proper job cleanup and resource management
+
+Comparison Baseline:
+  - Compare these results with microservices architecture
+  - Expected higher lower due to lower network overhead
+  - Decent scalability and better fault isolation than monolith
+  - Clean code due to module separation, better maintainability
+
+Files Generated:
+  - Detailed CSV results: analytics-modulith-load-test-results-20250815-230047.csv
+  - Performance report: analytics-modulith-performance-report-20250815-230047.txt
+
+=== END OF REPORT ===
