@@ -1,5 +1,5 @@
 # Analytics Dashboard Load Test Script
-# This script tests the monolithic architecture performance for the analytics dashboard endpoint
+# This script tests the modulithic architecture performance for the analytics dashboard endpoint
 # Usage: .\analytics-dashboard-load-test.ps1 -ConcurrentUsers 10 -TestDurationMinutes 5
 
 param(
@@ -17,7 +17,7 @@ $Yellow = "Yellow"
 $Red = "Red"
 $Cyan = "Cyan"
 
-Write-Host "=== Analytics Dashboard Load Test for Monolithic Architecture ===" -ForegroundColor $Cyan
+Write-Host "=== Analytics Dashboard Load Test for Modulith Architecture ===" -ForegroundColor $Cyan
 Write-Host "Target URL: $BaseUrl/api/analytics/dashboard" -ForegroundColor $Green
 Write-Host "Concurrent Users: $ConcurrentUsers" -ForegroundColor $Green
 Write-Host "Test Duration: $TestDurationMinutes minutes" -ForegroundColor $Green
@@ -271,7 +271,7 @@ function Generate-PerformanceReport {
     $throughput = if ($testDurationSeconds -gt 0) { [math]::Round($totalRequests / $testDurationSeconds, 2) } else { 0 }
     
     Write-Host ""
-    Write-Host "=== MONOLITHIC ARCHITECTURE PERFORMANCE REPORT ===" -ForegroundColor $Cyan
+    Write-Host "=== Modulithic ARCHITECTURE PERFORMANCE REPORT ===" -ForegroundColor $Cyan
     Write-Host ""
     Write-Host "Test Configuration:" -ForegroundColor $Yellow
     Write-Host "  Concurrent Users: $ConcurrentUsers"
@@ -343,7 +343,7 @@ function Generate-PerformanceReport {
     
     # Generate text report content
     $reportContent = @"
-=== MONOLITHIC ARCHITECTURE PERFORMANCE REPORT ===
+=== Modulithic ARCHITECTURE PERFORMANCE REPORT ===
 Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
 
 Test Configuration:
@@ -410,7 +410,7 @@ Data Analysis:
 Performance Assessment:
 $performanceAssessment
 Architecture Notes:
-  - This test represents monolithic architecture baseline performance
+  - This test represents modulithic architecture baseline performance
   - Data aggregation happens within single application process
   - Database queries execute against single H2 instance
   - No inter-service communication overhead
