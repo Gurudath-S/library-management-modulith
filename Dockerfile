@@ -29,7 +29,6 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Environment variables with defaults
 ENV SPRING_PROFILES_ACTIVE=default
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
-ENV SERVER_PORT=8080
 
 # Run the application
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
